@@ -1,0 +1,46 @@
+plugins {
+    kotlin("jvm") version "1.8.0"
+    application
+    `maven-publish`
+}
+
+allprojects {
+    group = "com.weltcorp.dta.waud.lib"
+    version = "0.1.10"
+
+    repositories {
+        mavenCentral()
+    }
+}
+
+val rxjavaVersion = "3.0.11"
+val grpcVersion = "3.19.4"
+
+dependencies {
+    implementation(project(":diary"))
+    implementation("io.reactivex.rxjava3:rxjava:$rxjavaVersion")
+    implementation("com.google.protobuf:protobuf-kotlin:$grpcVersion")
+    implementation("com.google.protobuf:protobuf-java:$grpcVersion")
+}
+
+subprojects {
+    apply(plugin = "kotlin")
+    apply(plugin = "application")
+    apply(plugin = "maven-publish")
+
+    tasks.test {
+        useJUnitPlatform()
+    }
+
+    dependencies {
+        testImplementation(kotlin("test"))
+    }
+}
+
+kotlin {
+    jvmToolchain(8)
+}
+
+application {
+    mainClass.set("MainKt")
+}

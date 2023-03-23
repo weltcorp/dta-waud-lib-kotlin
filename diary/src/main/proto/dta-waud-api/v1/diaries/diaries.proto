@@ -1,0 +1,63 @@
+syntax = "proto3";
+package dta.waud.api.v1.diaries;
+
+option go_package = "github.com/weltcorp/dta-waud-api/internal/proto/dta-waud-api/v1/diaries";
+
+import "validate/validate.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/struct.proto";
+
+service DiariesData {
+  rpc PutDiary(PutDiaryRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = { put: "/v1/diaries", body: "*" };
+  }
+  rpc GetDiaries(GetDiariesRequest) returns (GetDiariesResponse) {
+    option (google.api.http) = { get: "/v1/diaries" };
+  }
+  rpc DeleteDiary(DeleteDiaryRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = { delete: "/v1/diaries" };
+  }
+}
+
+message Diary {
+  optional DiaryMeta meta = 1;
+  optional DiaryData data = 2;
+}
+
+message DiaryMeta {
+  int32 dateUnix = 1;
+  string dateString = 2;
+}
+
+message DiaryData {
+  optional int32 alcoholCravingScore = 1[(validate.rules).int32 = {gte: 0, lte: 9}];
+  optional bool alcoholConsumed = 2;
+  optional string alcoholTypeAndAmount = 3;
+  optional int32 sleepQualityScore = 4[(validate.rules).int32 = {gte: 0, lte: 6}];
+  optional int32 appetiteScore = 5[(validate.rules).int32 = {gte: 0, lte: 6}];
+  optional int32 emotionScore = 6[(validate.rules).int32 = {gte: 0, lte: 6}];
+}
+
+message PutDiaryRequest {
+  int32 userId = 1[(validate.rules).int32 = {gte: 0}];
+  int64 date = 2;
+  optional DiaryData diary = 3;
+}
+
+message GetDiariesRequest {
+  int32 userId = 1[(validate.rules).int32 = {gte: 0}];
+  optional int64 startDate = 3;
+  optional int64 endDate = 4;
+}
+
+message GetDiariesResponse {
+  int32 startDate = 1;
+  int32 endDate = 2;
+  repeated Diary diaries = 3;
+}
+
+message DeleteDiaryRequest {
+  int32 userId = 1[(validate.rules).int32 = {gte: 0}];
+  int64 date = 2;
+}
