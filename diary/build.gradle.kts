@@ -79,7 +79,7 @@ publishing {
         create<MavenPublication>("maven") {
             groupId = "com.github.weltcorp"
             artifactId = "dta-waud-lib-kotlin"
-            version = "0.1.10"
+            version = "1.0.3"
 
             from(components["java"])
         }
