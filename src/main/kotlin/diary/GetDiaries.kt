@@ -6,7 +6,7 @@ import com.weltcorp.dta.waud.lib.diary.datasource.DiaryRemoteDataSourceGrpcImpl
 suspend fun main(args: Array<String>) {
     val config = DiaryApiConfig.Builder()
         .host("localhost")
-        .port(24100)
+        .port(24100) // The port can be removed, if you don't need.
         .auth("<YOUR-TOKEN>")
         .userId(1)
         .build()

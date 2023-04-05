@@ -9,11 +9,7 @@ import io.grpc.Metadata
 
 class DiaryRemoteDataSourceGrpcImpl(private val config: DiaryApiConfig) : RemoteDataSource {
 
-    private var _channel = ManagedChannelBuilder
-        .forAddress(config.host, config.port)
-        .usePlaintext()
-        .build()
-
+    private var _channel = getMangedChannel()
     private var _stub = DiariesDataGrpcKt.DiariesDataCoroutineStub(getChannel())
 
     private fun getHeader(): Metadata {
@@ -28,12 +24,18 @@ class DiaryRemoteDataSourceGrpcImpl(private val config: DiaryApiConfig) : Remote
 
     private fun getChannel(): ManagedChannel {
         if (_channel.isShutdown || _channel.isTerminated) {
-            _channel = ManagedChannelBuilder
-                .forAddress(config.host, config.port)
-                .usePlaintext()
-                .build()
+            _channel = getMangedChannel()
         }
         return _channel
+    }
+
+    private fun getMangedChannel(): ManagedChannel {
+        val channel = ManagedChannelBuilder
+            .forTarget("${config.host}${if (config.port != null) ":${config.port}" else ""}")
+        if (config.port != null) {
+            channel.usePlaintext()
+        }
+        return channel.build()
     }
 
     private fun stub(): DiariesDataGrpcKt.DiariesDataCoroutineStub {
