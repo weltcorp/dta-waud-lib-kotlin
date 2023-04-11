@@ -14,7 +14,6 @@ class DiaryRemoteDataSourceGrpcImpl(private val config: DiaryApiConfig) : Remote
 
     private fun getHeader(): Metadata {
         return Metadata().apply {
-            put(Metadata.Key.of("x-request-dtx-user-id", Metadata.ASCII_STRING_MARSHALLER), "${config.userId}}")
             put(Metadata.Key.of("x-request-dtx-src-service-name", Metadata.ASCII_STRING_MARSHALLER), "dta-waud-lib-kotlin")
             put(Metadata.Key.of("x-request-dtx-dst-service-name", Metadata.ASCII_STRING_MARSHALLER), "dta-waud-api")
             put(Metadata.Key.of("x-request-dtx-protocol", Metadata.ASCII_STRING_MARSHALLER), "GRPC")
@@ -45,9 +44,8 @@ class DiaryRemoteDataSourceGrpcImpl(private val config: DiaryApiConfig) : Remote
         return _stub
     }
 
-    override suspend fun putDiary(date: Int, data: DiaryData) {
-
-        if (config.userId == 0) {
+    override suspend fun putDiary(userId: Int, date: Int, data: DiaryData) {
+        if (userId == 0) {
             throw IllegalArgumentException("userId is not set")
         }
 
@@ -61,28 +59,31 @@ class DiaryRemoteDataSourceGrpcImpl(private val config: DiaryApiConfig) : Remote
         }
 
         val request = putDiaryRequest {
-            this.userId = config.userId
+            this.userId = userId
             this.date = date.toLong()
             this.diary = diaryData
         }
 
-        val header = getHeader()
+        val header = getHeader().apply {
+            put(Metadata.Key.of("x-request-dtx-user-id", Metadata.ASCII_STRING_MARSHALLER), "${userId}}")
+        }
 
         stub().putDiary(request, header)
     }
 
-    override suspend fun getDiaries(startDate: Int, endDate: Int): List<Diary> {
-
-        if (config.userId == 0) {
+    override suspend fun getDiaries(userId: Int, startDate: Int, endDate: Int): List<Diary> {
+        if (userId == 0) {
             throw IllegalArgumentException("userId is not set")
         }
 
         val request = getDiariesRequest{
-            this.userId = config.userId
+            this.userId = userId
             this.startDate = startDate.toLong()
             this.endDate = endDate.toLong()
         }
-        val header = getHeader()
+        val header = getHeader().apply {
+            put(Metadata.Key.of("x-request-dtx-user-id", Metadata.ASCII_STRING_MARSHALLER), "${userId}}")
+        }
 
         val resp = stub().getDiaries(request, header)
 
@@ -111,18 +112,19 @@ class DiaryRemoteDataSourceGrpcImpl(private val config: DiaryApiConfig) : Remote
         return diaries
     }
 
-    override suspend fun deleteDiary(date: Int) {
-
-        if (config.userId == 0) {
+    override suspend fun deleteDiary(userId: Int, date: Int) {
+        if (userId == 0) {
             throw IllegalArgumentException("userId is not set")
         }
 
         val request = deleteDiaryRequest {
-            this.userId = config.userId
+            this.userId = userId
             this.date = date.toLong()
         }
 
-        val header = getHeader()
+        val header = getHeader().apply {
+            put(Metadata.Key.of("x-request-dtx-user-id", Metadata.ASCII_STRING_MARSHALLER), "${userId}}")
+        }
 
         stub().deleteDiary(request, header)
     }

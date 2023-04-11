@@ -11,9 +11,9 @@ import io.reactivex.rxjava3.core.Single
 interface RemoteDataSource {
 
 
-    suspend fun putDiary(date: Int, data: DiaryData)
+    suspend fun putDiary(userId: Int, date: Int, data: DiaryData)
 
-    suspend fun getDiaries(startDate: Int, endDate: Int): List<Diary>
+    suspend fun getDiaries(userId: Int, startDate: Int, endDate: Int): List<Diary>
 
-    suspend fun deleteDiary(date: Int)
+    suspend fun deleteDiary(userId: Int, date: Int)
 }

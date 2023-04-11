@@ -8,15 +8,15 @@ suspend fun main(args: Array<String>) {
         .host("localhost")
         .port(24100) // The port can be removed, if you don't need.
         .auth("<YOUR-TOKEN>")
-        .userId(1)
         .build()
 
     val diaryRemoteDataSource = DiaryRemoteDataSourceGrpcImpl(config)
 
+    val userId = 1
     val startDate = 1679238000 // Mon Mar 20 2023 00:00:00 GMT+0900 (한국 표준시)
     val endDate = 1679497200 //Mon Mar 23 2023 00:00:00 GMT+0900 (한국 표준시)
 
-    val res = diaryRemoteDataSource.getDiaries(startDate, endDate)
+    val res = diaryRemoteDataSource.getDiaries(userId, startDate, endDate)
 
     println(res)
 }

@@ -7,14 +7,14 @@ import com.weltcorp.dta.waud.lib.diary.domain.model.*
 suspend fun main(args: Array<String>) {
     val config = DiaryApiConfig.Builder()
         .host("localhost")
-        .port(24100)
+        .port(24100) // The port can be removed, if you don't need.
         .auth("<YOUR-TOKEN>")
-        .userId(1)
         .build()
 
     val diaryRemoteDataSource = DiaryRemoteDataSourceGrpcImpl(config)
 
-    var date = 1679238000 // Mon Mar 20 2023 00:00:00 GMT+0900 (한국 표준시)
+    val userId = 1
+    val dateUnix = 1679238000 // Mon Mar 20 2023 00:00:00 GMT+0900 (한국 표준시)
 
     val diaryData = DiaryData.Builder()
         .alcoholCravingScore(1)
@@ -25,7 +25,7 @@ suspend fun main(args: Array<String>) {
         .emotionScore(1)
         .build()
 
-    diaryRemoteDataSource.putDiary(date, diaryData)
+    diaryRemoteDataSource.putDiary(userId, dateUnix, diaryData)
 
     println("Diary has been put.")
 }
