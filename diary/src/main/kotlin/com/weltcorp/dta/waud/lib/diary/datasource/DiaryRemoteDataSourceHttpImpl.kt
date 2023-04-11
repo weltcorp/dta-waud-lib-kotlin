@@ -18,15 +18,15 @@ class DiaryRemoteDataSourceHttpImpl(
     val config: DiaryApiConfig
 ) : RemoteDataSource {
 
-    override suspend fun putDiary(date: Int, data: DiaryData) {
+    override suspend fun putDiary(userId: Int, date: Int, data: DiaryData) {
         //Todo: Implement this
     }
 
-    override suspend fun deleteDiary(id: Int) {
+    override suspend fun deleteDiary(userId: Int, id: Int) {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getDiaries(startDate: Int, endDate: Int): List<Diary> {
+    override suspend fun getDiaries(userId: Int, startDate: Int, endDate: Int): List<Diary> {
         TODO("Not yet implemented")
     }
 }
