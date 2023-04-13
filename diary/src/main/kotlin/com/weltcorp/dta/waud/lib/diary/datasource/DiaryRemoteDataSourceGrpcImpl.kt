@@ -1,11 +1,16 @@
 package com.weltcorp.dta.waud.lib.diary.datasource
 
 import com.weltcorp.dta.waud.lib.diary.DiaryApiConfig
-import com.weltcorp.dta.waud.lib.diary.domain.model.*
+import com.weltcorp.dta.waud.lib.diary.domain.model.Diary
+import com.weltcorp.dta.waud.lib.diary.domain.model.DiaryData
+import com.weltcorp.dta.waud.lib.diary.domain.model.DiaryMeta
 import dta.waud.api.v1.diaries.*
 import io.grpc.ManagedChannel
 import io.grpc.ManagedChannelBuilder
 import io.grpc.Metadata
+import java.util.*
+import java.util.concurrent.TimeUnit
+
 
 class DiaryRemoteDataSourceGrpcImpl(private val config: DiaryApiConfig) : RemoteDataSource {
 
@@ -91,25 +96,40 @@ class DiaryRemoteDataSourceGrpcImpl(private val config: DiaryApiConfig) : Remote
         println("resp.diariesList")
         println(resp.diariesList)
 
-        val diaries = resp.diariesList.map { diary ->
-            Diary().apply {
-                meta = DiaryMeta.Builder()
-                    .dateUnix(diary.meta.dateUnix)
-                    .dateString(diary.meta.dateString)
-                    .build()
+        val days = getDifferenceDays(
+            Date(startDate.toLong() * 1000),
+            Date(endDate.toLong() * 1000)
+        ) + 1
 
-                data = DiaryData.Builder()
-                    .alcoholCravingScore(diary.data.alcoholCravingScore)
-                    .alcoholConsumed(diary.data.alcoholConsumed)
-                    .alcoholTypeAndAmount(diary.data.alcoholTypeAndAmount)
-                    .sleepQualityScore(diary.data.sleepQualityScore)
-                    .appetiteScore(diary.data.appetiteScore)
-                    .emotionScore(diary.data.emotionScore)
-                    .build()
-            }
+        val tempDiaryMap = mutableMapOf<Date, Diary>()
+        // Fill tempDiaryMap with empty diary
+        for (i in 0 until days) {
+            tempDiaryMap[Date(startDate.toLong() * 1000 + i * 24 * 60 * 60 * 1000)] =
+                Diary().initEmptyDiary(Date(startDate.toLong() * 1000 + i * 24 * 60 * 60 * 1000))
         }
 
-        return diaries
+        resp.diariesList.map { diary ->
+            // Replace tempDiaryMap with diary from server
+            tempDiaryMap[Date(diary.meta.dateUnix * 1000L)] =
+                Diary().apply {
+                    meta = DiaryMeta.Builder()
+                        .dateUnix(diary.meta.dateUnix)
+                        .dateString(diary.meta.dateString)
+                        .description("기록을 작성하거나 수정하세요")
+                        .isCompleted(true)
+                        .build()
+
+                    data = DiaryData.Builder()
+                        .alcoholCravingScore(diary.data.alcoholCravingScore)
+                        .alcoholConsumed(diary.data.alcoholConsumed)
+                        .alcoholTypeAndAmount(diary.data.alcoholTypeAndAmount)
+                        .sleepQualityScore(diary.data.sleepQualityScore)
+                        .appetiteScore(diary.data.appetiteScore)
+                        .emotionScore(diary.data.emotionScore)
+                        .build()
+                }
+        }
+        return tempDiaryMap.values.toList()
     }
 
     override suspend fun deleteDiary(userId: Int, date: Int) {
@@ -128,5 +148,20 @@ class DiaryRemoteDataSourceGrpcImpl(private val config: DiaryApiConfig) : Remote
 
         stub().deleteDiary(request, header)
     }
+
+    private fun getDifferenceDays(d1: Date, d2: Date): Long {
+        val diff = d2.time - d1.time
+        return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS)
+    }
 }
 
+private fun Diary.initEmptyDiary(date: Date): Diary {
+    return Diary().apply {
+        meta = DiaryMeta.Builder()
+            .dateUnix((date.time / 1000).toInt())
+            .dateString(date.toString())
+            .build()
+
+        data = DiaryData.Builder().build()
+    }
+}
