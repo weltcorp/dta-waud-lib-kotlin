@@ -18,6 +18,7 @@ val grpcVersion = "3.19.4"
 
 dependencies {
     implementation(project(":diary"))
+    implementation(project(":learning"))
     implementation("io.reactivex.rxjava3:rxjava:$rxjavaVersion")
     implementation("com.google.protobuf:protobuf-kotlin:$grpcVersion")
     implementation("com.google.protobuf:protobuf-java:$grpcVersion")
