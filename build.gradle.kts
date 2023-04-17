@@ -6,7 +6,7 @@ plugins {
 
 allprojects {
     group = "com.weltcorp.dta.waud.lib"
-    version = "1.0.11"
+    version = "1.0.12"
 
     repositories {
         mavenCentral()
@@ -17,8 +17,8 @@ val rxjavaVersion = "3.0.11"
 val grpcVersion = "3.19.4"
 
 dependencies {
-    implementation(project(":diary"))
-    implementation(project(":learning"))
+    implementation(project(mapOf("path" to ":diary")))
+    implementation(project(mapOf("path" to ":learning")))
     implementation("io.reactivex.rxjava3:rxjava:$rxjavaVersion")
     implementation("com.google.protobuf:protobuf-kotlin:$grpcVersion")
     implementation("com.google.protobuf:protobuf-java:$grpcVersion")
