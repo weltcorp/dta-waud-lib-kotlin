@@ -6,7 +6,7 @@ plugins {
 
 allprojects {
     group = "com.weltcorp.dta.waud.lib"
-    version = "1.0.3"
+    version = "1.0.11"
 
     repositories {
         mavenCentral()
