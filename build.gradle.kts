@@ -4,6 +4,7 @@ plugins {
     `maven-publish`
 }
 
+val sdkVersion = "1.0.17"
 allprojects {
     group = "com.weltcorp.dta.waud.lib"
     version = sdkVersion
@@ -13,7 +14,6 @@ allprojects {
     }
 }
 
-val sdkVersion = "1.0.16"
 val rxjavaVersion = "3.0.11"
 val grpcVersion = "3.19.4"
 
