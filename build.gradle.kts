@@ -46,15 +46,3 @@ kotlin {
 application {
     mainClass.set("MainKt")
 }
-
-//publishing {
-//    publications {
-//        create<MavenPublication>("maven") {
-//            groupId = "com.github.weltcorp"
-//            artifactId = "dta-waud-lib-kotlin"
-//            version = sdkVersion
-//
-//            from(components["java"])
-//        }
-//    }
-//}

@@ -4,7 +4,7 @@ plugins {
     kotlin("jvm")
     id("java")
     id("com.google.protobuf") version "0.8.13"
-    `maven-publish`
+    id("maven-publish")
 }
 
 repositories {
@@ -20,7 +20,6 @@ tasks.getByName<Test>("test") {
     useJUnitPlatform()
 }
 
-val sdkVersion = "1.0.16"
 val grpcVersion = "3.19.4"
 val grpcKotlinVersion = "1.2.1"
 val grpcProtoVersion = "1.44.1"
@@ -84,15 +83,3 @@ afterEvaluate() {
         }
     }
 }
-
-//publishing {
-//    publications {
-//        create<MavenPublication>("maven") {
-//            groupId = "com.github.weltcorp"
-//            artifactId = "dta-waud-lib-kotlin"
-//            version = sdkVersion
-//
-//            from(components["java"])
-//        }
-//    }
-//}
