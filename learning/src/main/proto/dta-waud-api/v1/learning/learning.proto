@@ -1,0 +1,36 @@
+syntax = "proto3";
+package dta.waud.api.v1.learning;
+
+option go_package = "github.com/weltcorp/dta-waud-api/internal/proto/dta-waud-api/v1/learning";
+
+import "validate/validate.proto";
+import "google/api/annotations.proto";
+
+// LearningData service for managing learning session items
+service LearningData {
+  // Retrieve user session items by course Id
+  rpc GetUserSessionItems(GetUserSessionItemsRequest) returns (GetUserSessionItemsResponse) {
+    option (google.api.http) = { get: "/v1/learning/sessionItems/users/{userId}" };
+  }
+}
+
+// Request to get user session items by course Id
+message GetUserSessionItemsRequest {
+  int32 userId = 1[(validate.rules).int32.gt = 0]; // User Id
+}
+
+// Response containing user session items by course Id
+message GetUserSessionItemsResponse {
+  repeated UserSessionItem data = 1; // List of user session items
+}
+
+// User session item data
+message UserSessionItem {
+  int32 id = 1; // Session item Id
+  string name = 2; // Session item name
+  int32 order = 3; // Session item order
+  int32 typeId = 4; // Session item type Id
+  int32 sessionId = 5; // Session Id
+  string sessionName = 6; // Session name
+  optional int32 userLearningStatusId = 7; // User learning status Id (optional)
+}
