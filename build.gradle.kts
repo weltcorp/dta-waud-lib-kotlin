@@ -6,7 +6,7 @@ plugins {
 
 allprojects {
     group = "com.weltcorp.dta.waud.lib"
-    version = "1.0.13"
+    version = "1.0.14"
 
     repositories {
         mavenCentral()
@@ -44,4 +44,16 @@ kotlin {
 
 application {
     mainClass.set("MainKt")
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = "com.github.weltcorp"
+            artifactId = "dta-waud-lib-kotlin"
+            version = "1.0.14"
+
+            from(components["java"])
+        }
+    }
 }
