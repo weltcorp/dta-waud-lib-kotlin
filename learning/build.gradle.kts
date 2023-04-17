@@ -20,6 +20,7 @@ tasks.getByName<Test>("test") {
     useJUnitPlatform()
 }
 
+val sdkVersion = "1.0.16"
 val grpcVersion = "3.19.4"
 val grpcKotlinVersion = "1.2.1"
 val grpcProtoVersion = "1.44.1"
@@ -74,14 +75,14 @@ protobuf {
     }
 }
 
-//publishing {
-//    publications {
-//        create<MavenPublication>("maven") {
-//            groupId = "com.github.weltcorp"
-//            artifactId = "dta-waud-lib-kotlin"
-//            version = "1.0.15"
-//
-//            from(components["java"])
-//        }
-//    }
-//}
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = "com.github.weltcorp"
+            artifactId = "dta-waud-lib-kotlin"
+            version = sdkVersion
+
+            from(components["java"])
+        }
+    }
+}
