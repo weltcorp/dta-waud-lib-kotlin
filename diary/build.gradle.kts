@@ -4,7 +4,7 @@ plugins {
     kotlin("jvm")
     id("java")
     id("com.google.protobuf") version "0.8.13"
-    id("maven-publish")
+    `maven-publish`
 }
 
 repositories {
@@ -42,8 +42,8 @@ sourceSets{
             srcDirs(
                 "build/generated/source/proto/main/grpc",
                 "build/generated/source/proto/main/grpckt",
-                "build/generated/source/proto/main/java/dta/waud/api/v1/diaries",
-                "build/generated/source/proto/main/kotlin/dta/waud/api/v1/diaries"
+//                "build/generated/source/proto/main/java",
+//                "build/generated/source/proto/main/kotlin"
             )
         }
     }
