@@ -45,14 +45,18 @@ class ProjectRemoteDataSourceGrpcImpl(private val config: ProjectApiConfig) : Pr
         return _stub
     }
 
-    override suspend fun getProjectUserStatus(userId: Int): ProjectUserStatus {
-        if (userId == 0) {
+    override suspend fun getProjectUserStatus(userId: Int, projectId: Int): ProjectUserStatus {
+        if (userId < 1) {
             throw IllegalArgumentException("userId is not set")
+        }
+
+        if (projectId < 1) {
+            throw IllegalArgumentException("projectId is not set")
         }
 
         val request = getUserStatusByProjectIdRequest {
             this.userId = userId
-            this.projectId = 9 // dta-waud projectId
+            this.projectId = projectId
         }
 
         val header = getHeader().apply {
@@ -62,6 +66,7 @@ class ProjectRemoteDataSourceGrpcImpl(private val config: ProjectApiConfig) : Pr
         val resp = stub().getUserStatusByProjectId(request, header)
 
         return when(resp.status) {
+            ProjectUserStatus.NONE.ordinal -> ProjectUserStatus.NONE
             ProjectUserStatus.ENABLED.ordinal -> ProjectUserStatus.ENABLED
             ProjectUserStatus.DISABLED.ordinal -> ProjectUserStatus.DISABLED
             ProjectUserStatus.DELETED.ordinal -> ProjectUserStatus.DELETED
@@ -71,7 +76,7 @@ class ProjectRemoteDataSourceGrpcImpl(private val config: ProjectApiConfig) : Pr
             ProjectUserStatus.DORMANT.ordinal -> ProjectUserStatus.DORMANT
             ProjectUserStatus.IN_POST_ASSESSMENT.ordinal -> ProjectUserStatus.IN_POST_ASSESSMENT
             ProjectUserStatus.DROPOUT.ordinal -> ProjectUserStatus.DROPOUT
-            else -> ProjectUserStatus.DISABLED
+            else -> ProjectUserStatus.NONE
         }
     }
 }
