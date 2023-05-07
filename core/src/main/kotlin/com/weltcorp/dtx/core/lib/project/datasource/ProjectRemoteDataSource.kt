@@ -4,5 +4,5 @@ import com.weltcorp.dtx.core.lib.project.domain.model.ProjectUserStatus
 
 interface ProjectRemoteDataSource {
 
-    suspend fun getProjectUserStatus(userId: Int): ProjectUserStatus
+    suspend fun getProjectUserStatus(userId: Int, projectId: Int): ProjectUserStatus
 }

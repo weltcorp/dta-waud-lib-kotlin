@@ -12,7 +12,9 @@ suspend fun main(args: Array<String>) {
 
     val projectRemoteDataSource = ProjectRemoteDataSourceGrpcImpl(config)
 
-    val userId = 17933
-    val res = projectRemoteDataSource.getProjectUserStatus(userId)
+    val userId = 100
+    val projectId = 1
+
+    val res = projectRemoteDataSource.getProjectUserStatus(userId, projectId)
     println(res)
 }

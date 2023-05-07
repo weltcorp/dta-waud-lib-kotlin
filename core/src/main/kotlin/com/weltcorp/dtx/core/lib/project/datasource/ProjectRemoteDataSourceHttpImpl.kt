@@ -4,7 +4,7 @@ import com.weltcorp.dtx.core.lib.project.ProjectApiConfig
 import com.weltcorp.dtx.core.lib.project.domain.model.ProjectUserStatus
 
 class ProjectRemoteDataSourceHttpImpl(private val config: ProjectApiConfig) : ProjectRemoteDataSource {
-    override suspend fun getProjectUserStatus(userId: Int): ProjectUserStatus {
+    override suspend fun getProjectUserStatus(userId: Int, projectId: Int): ProjectUserStatus {
         TODO("Not yet implemented")
     }
 }
