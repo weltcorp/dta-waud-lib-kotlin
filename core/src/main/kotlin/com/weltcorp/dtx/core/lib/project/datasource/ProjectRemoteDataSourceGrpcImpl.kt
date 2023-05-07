@@ -2,8 +2,8 @@ package com.weltcorp.dtx.core.lib.project.datasource
 
 import com.weltcorp.dtx.core.lib.project.ProjectApiConfig
 import com.weltcorp.dtx.core.lib.project.domain.model.ProjectUserStatus
-import dtx.core.api.v2.project.ProjectUsersDataGrpcKt
-import dtx.core.api.v2.project.getUserStatusByProjectIdRequest
+import users.ProjectUsersDataGrpcKt
+import users.getUserStatusByProjectIdRequest
 import io.grpc.ManagedChannel
 import io.grpc.ManagedChannelBuilder
 import io.grpc.Metadata
@@ -16,7 +16,7 @@ class ProjectRemoteDataSourceGrpcImpl(private val config: ProjectApiConfig) : Pr
     private fun getHeader(): Metadata {
         return Metadata().apply {
             put(Metadata.Key.of("x-request-dtx-src-service-name", Metadata.ASCII_STRING_MARSHALLER), "dta-waud-lib-kotlin")
-            put(Metadata.Key.of("x-request-dtx-dst-service-name", Metadata.ASCII_STRING_MARSHALLER), "dtx-core-api")
+            put(Metadata.Key.of("x-request-dtx-dst-service-name", Metadata.ASCII_STRING_MARSHALLER), "dtx-api-core")
             put(Metadata.Key.of("x-request-dtx-protocol", Metadata.ASCII_STRING_MARSHALLER), "GRPC")
             put(Metadata.Key.of("authorization", Metadata.ASCII_STRING_MARSHALLER), "Bearer " + config.auth)
         }
@@ -52,6 +52,7 @@ class ProjectRemoteDataSourceGrpcImpl(private val config: ProjectApiConfig) : Pr
 
         val request = getUserStatusByProjectIdRequest {
             this.userId = userId
+            this.projectId = 9 // dta-waud projectId
         }
 
         val header = getHeader().apply {

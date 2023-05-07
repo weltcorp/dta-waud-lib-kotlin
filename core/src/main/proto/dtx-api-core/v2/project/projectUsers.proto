@@ -1,0 +1,189 @@
+syntax = "proto3";
+package users;
+
+option go_package = "weltcorp.com/proto/project/v2/users";
+
+import "validate/validate.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/any.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+service ProjectUsersData {
+  rpc AddUserInProject(AddUserInProjectRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = { post: "/v2/project/users/{userId}/projects/{projectId}", body: "*" };
+  }
+  rpc PatchUserInProject(PatchUserInProjectRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = { patch: "/v2/project/users/{userId}/projects/{projectId}", body: "*" };
+  }
+  rpc GetUserInProject(GetUserInProjectRequest) returns (ProjectUser) {
+    option (google.api.http) = { get: "/v2/project/users/{userId}/projects/{projectId}" };
+  }
+  rpc DeleteUserInProject(DeleteUserInProjectRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = { delete: "/v2/project/users/{userId}/projects/{projectId}" };
+  }
+  rpc AddUserInGroup(AddUserInGroupRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = { post: "/v2/project/users/{userId}/groups/{groupId}", body: "*" };
+  }
+  rpc GetUserInGroup(GetUserInGroupRequest) returns (GetUserInGroupResponse) {
+    option (google.api.http) = { get: "/v2/project/users/{userId}/groups/{groupId}" };
+  }
+  rpc DeleteUserInGroup(DeleteUserInGroupRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = { delete: "/v2/project/users/{userId}/groups/{groupId}" };
+  }
+  rpc AddUserInSite(AddUserInSiteRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = { post: "/v2/project/users/{userId}/sites/{siteId}", body: "*" };
+  }
+  rpc GetUserInSite(GetUserInSiteRequest) returns (SiteUser) {
+    option (google.api.http) = { get: "/v2/project/users/{userId}/sites/{siteId}" };
+  }
+  rpc GetUsersByProjectId(GetUsersByProjectIdRequest) returns (GetUsersByProjectIdResponse) {
+    option (google.api.http) = { get: "/v2/project/users/projects/{projectId}" };
+  }
+  rpc GetUsersByGroupId(GetUsersByGroupIdRequest) returns (GetUsersByGroupIdResponse) {
+    option (google.api.http) = { get: "/v2/project/users/groups/{groupId}" };
+  }
+  rpc GetUserIdsByProjectId(GetUserIdsByProjectIdRequest) returns (GetUserIdsByProjectIdResponse) {
+    option (google.api.http) = { get: "/v2/project/users/ids/projects/{projectId}" };
+  }
+  rpc GetUserStatusByProjectId(GetUserStatusByProjectIdRequest) returns (GetUserStatusByProjectIdResponse) {
+    option (google.api.http) = { get: "/v2/project/users/{userId}/projects/{projectId}/status" };
+  }
+}
+
+message ProjectUser {
+  int32 userId = 1;
+  int32 projectId = 2;
+  int32 statusId = 3;
+  int32 groupId = 4;
+  int32 siteId = 5;
+  string accesscode = 6;
+  int32 treatmentPeriodDays = 7;
+  int32 usagePeriodDays = 8;
+  google.protobuf.Timestamp updatedAt = 10;
+  google.protobuf.Timestamp createdAt = 11;
+}
+
+message GetUserInGroupResponse {
+  int32 userId = 1;
+  int32 projectId = 2;
+  int32 statusId = 3;
+  google.protobuf.Timestamp updatedAt = 10;
+  google.protobuf.Timestamp createdAt = 11;
+}
+
+message SiteUser {
+  int32 userId = 1;
+  int32 projectId = 2;
+  int32 siteId = 3;
+  google.protobuf.Timestamp updatedAt = 10;
+  google.protobuf.Timestamp createdAt = 11;
+}
+
+message AddUserInProjectRequest {
+  int32 userId = 1 [(validate.rules).int32.gt = 0];
+  int32 projectId = 2 [(validate.rules).int32.gt = 0];
+  int32 statusId = 3 [(validate.rules).int32 = {gt: 0, ignore_empty: true}];
+}
+
+message PatchUserInProjectRequest {
+  int32 userId = 1 [(validate.rules).int32.gt = 0];
+  int32 projectId = 2 [(validate.rules).int32.gt = 0];
+  int32 statusId = 3 [(validate.rules).int32 = {gt: 0, ignore_empty: true}];
+}
+
+message GetUserInProjectRequest {
+  int32 userId = 1 [(validate.rules).int32.gt = 0];
+  int32 projectId = 2 [(validate.rules).int32.gt = 0];
+}
+
+message DeleteUserInProjectRequest {
+  int32 userId = 1 [(validate.rules).int32.gt = 0];
+  int32 projectId = 2 [(validate.rules).int32.gt = 0];
+}
+
+message AddUserInGroupRequest {
+  int32 userId = 1 [(validate.rules).int32.gt = 0];
+  int32 projectId = 2 [(validate.rules).int32.gt = 0];
+  int32 groupId = 3 [(validate.rules).int32.gt = 0];
+}
+
+message GetUserInGroupRequest {
+  int32 userId = 1 [(validate.rules).int32.gt = 0];
+  int32 projectId = 2 [(validate.rules).int32.gt = 0];
+  int32 groupId = 3 [(validate.rules).int32.gt = 0];
+}
+
+message DeleteUserInGroupRequest {
+  int32 userId = 1 [(validate.rules).int32.gt = 0];
+  int32 projectId = 2 [(validate.rules).int32.gt = 0];
+  int32 groupId = 3 [(validate.rules).int32.gt = 0];
+}
+
+message AddUserInSiteRequest {
+  int32 userId = 1 [(validate.rules).int32.gt = 0];
+  int32 projectId = 2 [(validate.rules).int32.gt = 0];
+  int32 siteId = 3 [(validate.rules).int32.gt = 0];
+}
+
+message GetUserInSiteRequest {
+  int32 userId = 1 [(validate.rules).int32.gt = 0];
+  int32 projectId = 2 [(validate.rules).int32.gt = 0];
+  int32 siteId = 3 [(validate.rules).int32.gt = 0];
+}
+
+message GetUsersByProjectIdRequest {
+  int32 projectId = 1 [(validate.rules).int32.gt = 0];
+  int32 groupId = 2 [(validate.rules).int32 = {gt: 0, ignore_empty: true}];
+  int32 status = 3;
+  int32 siteId = 4;
+  int32 limit = 5;
+  int32 offset = 6;
+  google.protobuf.Timestamp createdAt = 7;
+}
+
+message GetUsersByProjectIdResponse {
+  int32 totalCount = 1;
+  int32 count = 2;
+  int32 offset = 3;
+  repeated ProjectUser data = 4;
+}
+
+message GetUsersByGroupIdRequest {
+  int32 groupId = 1 [(validate.rules).int32 = {gt: 0}];
+  int32 projectId = 2;
+  optional string timezone = 3;
+}
+
+message GroupUser {
+  int32 projectId = 1;
+  int32 groupId = 2;
+  int32 userId = 3;
+  google.protobuf.Timestamp createdAt = 4;
+  google.protobuf.Timestamp updatedAt = 5;
+}
+
+message GetUsersByGroupIdResponse {
+  int32 totalCount = 1;
+  repeated GroupUser data = 4;
+}
+
+message GetUserIdsByProjectIdRequest {
+  int32 projectId = 1;
+  repeated int32 groupIds = 2;
+  int32 status = 3;
+}
+
+message GetUserIdsByProjectIdResponse {
+  int32 totalCount = 1;
+  repeated int32 data = 4;
+}
+
+message GetUserStatusByProjectIdRequest {
+  int32 userId = 1;
+  int32 projectId = 2;
+}
+
+message GetUserStatusByProjectIdResponse {
+  int32 status = 1;
+}
