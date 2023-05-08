@@ -7,13 +7,17 @@ import dta.waud.api.v1.diaries.Diaries
 import io.grpc.ManagedChannel
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
+import java.time.LocalDate
 
 interface RemoteDataSource {
 
+    suspend fun getDiaries(userId: Int, startDate: LocalDate, endDate: LocalDate): List<Diary>
 
-    suspend fun putDiary(userId: Int, date: Int, data: DiaryData)
+    suspend fun createDiary(userId: Int, date: LocalDate, data: DiaryData)
 
-    suspend fun getDiaries(userId: Int, startDate: Int, endDate: Int): List<Diary>
+    suspend fun updateDiary(userId: Int, answerId: Int, data: DiaryData)
 
-    suspend fun deleteDiary(userId: Int, date: Int)
+    suspend fun deleteDiary(userId: Int, answerId: Int)
+
+    suspend fun putDiary(userId: Int, date: LocalDate, data: DiaryData)
 }

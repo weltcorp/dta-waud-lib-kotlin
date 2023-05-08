@@ -2,6 +2,7 @@ package diary
 
 import com.weltcorp.dta.waud.lib.diary.DiaryApiConfig
 import com.weltcorp.dta.waud.lib.diary.datasource.DiaryRemoteDataSourceGrpcImpl
+import com.weltcorp.dta.waud.lib.diary.domain.model.*
 import java.time.LocalDate
 
 suspend fun main(args: Array<String>) {
@@ -14,12 +15,16 @@ suspend fun main(args: Array<String>) {
     val diaryRemoteDataSource = DiaryRemoteDataSourceGrpcImpl(config)
 
     val userId = 1
+    val diaryData = DiaryData.Builder()
+        .alcoholCravingScore(1)
+        .alcoholConsumed(true)
+        .alcoholTypeAndAmount("맥주 1병")
+        .sleepQualityScore(1)
+        .appetiteScore(1)
+        .emotionScore(1)
+        .build()
 
-    val res = diaryRemoteDataSource.getDiaries(
-        userId,
-        LocalDate.of(2023, 1, 1),
-        LocalDate.now(),
-    )
+    diaryRemoteDataSource.createDiary(userId, LocalDate.now(), diaryData)
 
-    println(res)
+    println("Diary has been created.")
 }
