@@ -67,11 +67,11 @@ class DiaryRemoteDataSourceGrpcImpl(private val config: DiaryApiConfig) : Remote
         println(resp)
 
         val tempDiaryMap = mutableMapOf<LocalDate, Diary>()
-        val tempStartDate = LocalDate.of(startDate.year, startDate.month, startDate.dayOfMonth)
+        var tempStartDate = LocalDate.of(startDate.year, startDate.month, startDate.dayOfMonth)
         // Fill tempDiaryMap with empty diary
-        while (tempStartDate > endDate) {
+        while (tempStartDate < endDate) {
             tempDiaryMap[tempStartDate] = Diary().initEmptyDiary(tempStartDate)
-            tempStartDate.plusDays(1)
+            tempStartDate = tempStartDate.plusDays(1)
         }
 
         resp.diariesList.map { diary ->
