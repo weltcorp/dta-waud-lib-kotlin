@@ -76,7 +76,7 @@ class DiaryRemoteDataSourceGrpcImpl(private val config: DiaryApiConfig) : Remote
 
         resp.diariesList.map { diary ->
             // Replace tempDiaryMap with diary data from server
-            tempDiaryMap[LocalDate.ofEpochDay(diary.meta.dateUnix.toLong())] =
+            tempDiaryMap[LocalDate.parse(diary.meta.dateString, DateTimeFormatter.ofPattern("yyyy-MM-dd"))] =
                 Diary().apply {
                     meta = DiaryMeta.Builder()
                         .answerId(diary.meta.answerId)
