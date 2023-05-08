@@ -13,20 +13,29 @@ import io.grpc.ManagedChannelBuilder
 import io.grpc.Metadata
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
+import java.time.LocalDate
 
 class DiaryRemoteDataSourceHttpImpl(
     val config: DiaryApiConfig
 ) : RemoteDataSource {
 
-    override suspend fun putDiary(userId: Int, date: Int, data: DiaryData) {
-        //Todo: Implement this
-    }
-
-    override suspend fun deleteDiary(userId: Int, id: Int) {
+    override suspend fun getDiaries(userId: Int, startDate: LocalDate, endDate: LocalDate): List<Diary> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getDiaries(userId: Int, startDate: Int, endDate: Int): List<Diary> {
+    override suspend fun createDiary(userId: Int, date: LocalDate, data: DiaryData) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun updateDiary(userId: Int, answerId: Int, data: DiaryData) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun deleteDiary(userId: Int, answerId: Int) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun putDiary(userId: Int, date: LocalDate, data: DiaryData) {
         TODO("Not yet implemented")
     }
 }

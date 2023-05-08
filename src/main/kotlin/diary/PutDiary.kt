@@ -3,6 +3,7 @@ package diary
 import com.weltcorp.dta.waud.lib.diary.DiaryApiConfig
 import com.weltcorp.dta.waud.lib.diary.datasource.DiaryRemoteDataSourceGrpcImpl
 import com.weltcorp.dta.waud.lib.diary.domain.model.*
+import java.time.LocalDate
 
 suspend fun main(args: Array<String>) {
     val config = DiaryApiConfig.Builder()
@@ -14,8 +15,6 @@ suspend fun main(args: Array<String>) {
     val diaryRemoteDataSource = DiaryRemoteDataSourceGrpcImpl(config)
 
     val userId = 1
-    val dateUnix = 1679238000 // Mon Mar 20 2023 00:00:00 GMT+0900 (한국 표준시)
-
     val diaryData = DiaryData.Builder()
         .alcoholCravingScore(1)
         .alcoholConsumed(true)
@@ -25,7 +24,7 @@ suspend fun main(args: Array<String>) {
         .emotionScore(1)
         .build()
 
-    diaryRemoteDataSource.putDiary(userId, dateUnix, diaryData)
+    diaryRemoteDataSource.putDiary(userId, LocalDate.now(), diaryData)
 
     println("Diary has been put.")
 }

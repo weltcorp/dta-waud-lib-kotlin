@@ -14,9 +14,9 @@ suspend fun main(args: Array<String>) {
     val diaryRemoteDataSource = DiaryRemoteDataSourceGrpcImpl(config)
 
     val userId = 1
-    val dateUnix = 1679238000 // Mon Mar 20 2023 00:00:00 GMT+0900 (한국 표준시)
+    val answerId = 1
 
-    diaryRemoteDataSource.deleteDiary(userId, dateUnix)
+    diaryRemoteDataSource.deleteDiary(userId, answerId)
 
     println("Diary has been deleted.")
 }

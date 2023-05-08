@@ -1,0 +1,57 @@
+syntax = "proto3";
+package userConfigs;
+
+option go_package = "weltcorp.com/dtx-lib-proto/proto/core/v2/project/userConfigs";
+
+import "validate/validate.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/any.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
+
+service UserConfigsData {
+  rpc UpsertUserConfig(UpsertUserConfigRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = { put: "/v2/configs/users/{userId}", body: "*" };
+  }
+  rpc CreateUserPermissionLog(CreateUserPermissionLogRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = { post: "/v2/configs/users/{userId}/permissions", body: "*" };
+  }
+}
+
+message UpsertUserConfigRequest {
+  int32 userId = 1[(validate.rules).int32 = {gt: 0}];
+  int32 projectId = 2[(validate.rules).int32 = {gt: 0}];
+  optional UserConfig config = 3;
+  optional UserFcmToken fcmToken = 4;
+  optional UserPushNotification pushNotification = 5;
+}
+
+message UserConfig {
+  optional string platform = 1;
+  optional string deviceName = 2;
+  optional string osVersion = 3;
+  optional string appVersion = 4;
+}
+
+message UserFcmToken {
+  optional string fcmToken = 1;
+  optional string firebaseProjectId = 2;
+}
+
+message UserPushNotification {
+  optional bool systemSettings = 1;
+  optional bool app = 2;
+}
+
+message CreateUserPermissionLogRequest {
+  int32 userId = 1[(validate.rules).int32 = {gt: 0}];
+  int32 projectId = 2[(validate.rules).int32 = {gt: 0}];
+  UserPermission permission = 3;
+}
+
+message UserPermission {
+  optional string platform = 1;
+  optional string deviceName = 2;
+  optional google.protobuf.Struct permissions = 3;
+}

@@ -12,6 +12,12 @@ service DiariesData {
   rpc PutDiary(PutDiaryRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = { put: "/v1/diaries", body: "*" };
   }
+  rpc CreateDiary(CreateDiaryRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = { post: "/v1/diaries", body: "*" };
+  }
+  rpc UpdateDiary(UpdateDiaryRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = { patch: "/v1/diaries/answers/{answerId}", body: "*" };
+  }
   rpc GetDiaries(GetDiariesRequest) returns (GetDiariesResponse) {
     option (google.api.http) = { get: "/v1/diaries" };
   }
@@ -28,6 +34,7 @@ message Diary {
 message DiaryMeta {
   int32 dateUnix = 1;
   string dateString = 2;
+  int32 answerId= 3;
 }
 
 message DiaryData {
@@ -41,23 +48,35 @@ message DiaryData {
 
 message PutDiaryRequest {
   int32 userId = 1[(validate.rules).int32 = {gte: 0}];
-  int64 date = 2;
+  string date = 2;
+  optional DiaryData diary = 3;
+}
+
+message CreateDiaryRequest {
+  int32 userId = 1[(validate.rules).int32 = {gte: 0}];
+  string date = 2;
+  optional DiaryData diary = 3;
+}
+
+message UpdateDiaryRequest {
+  int32 userId = 1[(validate.rules).int32 = {gte: 0}];
+  int32 answerId = 2[(validate.rules).int32 = {gte: 0}];
   optional DiaryData diary = 3;
 }
 
 message GetDiariesRequest {
   int32 userId = 1[(validate.rules).int32 = {gte: 0}];
-  optional int64 startDate = 3;
-  optional int64 endDate = 4;
+  optional string startDate = 3;
+  optional string endDate = 4;
 }
 
 message GetDiariesResponse {
-  int32 startDate = 1;
-  int32 endDate = 2;
+  string startDate = 1;
+  string endDate = 2;
   repeated Diary diaries = 3;
 }
 
 message DeleteDiaryRequest {
   int32 userId = 1[(validate.rules).int32 = {gte: 0}];
-  int64 date = 2;
+  int32 answerId = 2[(validate.rules).int32 = {gte: 0}];
 }
