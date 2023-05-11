@@ -19,5 +19,8 @@ interface RemoteDataSource {
 
     suspend fun deleteDiary(userId: Int, answerId: Int)
 
+    /**
+     * DEPRECATED
+     */
     suspend fun putDiary(userId: Int, date: LocalDate, data: DiaryData)
 }
