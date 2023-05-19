@@ -1,7 +1,7 @@
 syntax = "proto3";
-package userConfigs;
+package dtx.api.core.v3.project.userConfigs;
 
-option go_package = "weltcorp.com/dtx-lib-proto/proto/core/v2/project/userConfigs";
+option go_package = "weltcorp.com/dtx-lib-proto/proto/core/v3/project/userConfigs";
 
 import "validate/validate.proto";
 import "google/api/annotations.proto";
@@ -12,10 +12,10 @@ import "google/protobuf/struct.proto";
 
 service UserConfigsData {
   rpc UpsertUserConfig(UpsertUserConfigRequest) returns (google.protobuf.Empty) {
-    option (google.api.http) = { put: "/v2/configs/users/{userId}", body: "*" };
+    option (google.api.http) = { put: "/configs/users/{userId}", body: "*" };
   }
   rpc CreateUserPermissionLog(CreateUserPermissionLogRequest) returns (google.protobuf.Empty) {
-    option (google.api.http) = { post: "/v2/configs/users/{userId}/permissions", body: "*" };
+    option (google.api.http) = { post: "/configs/users/{userId}/permissions", body: "*" };
   }
 }
 

@@ -8,10 +8,10 @@ import com.weltcorp.dtx.core.lib.userconfig.domain.model.UserPushNotification as
 import io.grpc.ManagedChannel
 import io.grpc.ManagedChannelBuilder
 import io.grpc.Metadata
-import userConfigs.UserConfigs
-import userConfigs.UserConfigsDataGrpcKt
-import userConfigs.createUserPermissionLogRequest
-import userConfigs.upsertUserConfigRequest
+import dtx.api.core.v3.project.userConfigs.UserConfigs
+import dtx.api.core.v3.project.userConfigs.UserConfigsDataGrpcKt
+import dtx.api.core.v3.project.userConfigs.createUserPermissionLogRequest
+import dtx.api.core.v3.project.userConfigs.upsertUserConfigRequest
 
 class UserConfigRemoteDataSourceGrpcImpl(private val config: UserConfigApiConfig) : UserConfigRemoteDataSource {
 
@@ -23,10 +23,9 @@ class UserConfigRemoteDataSourceGrpcImpl(private val config: UserConfigApiConfig
             put(Metadata.Key.of("x-request-dtx-src-account-type", Metadata.ASCII_STRING_MARSHALLER), "0")
             put(Metadata.Key.of("x-request-dtx-src-domain-id", Metadata.ASCII_STRING_MARSHALLER), "100")
             put(Metadata.Key.of("x-request-dtx-src-service-name", Metadata.ASCII_STRING_MARSHALLER), "dta-waud-lib-kotlin")
-//            put(Metadata.Key.of("x-request-dtx-src-service-version", Metadata.ASCII_STRING_MARSHALLER), "X.X.X")
+            put(Metadata.Key.of("x-request-dtx-dst-protocol", Metadata.ASCII_STRING_MARSHALLER), "grpc")
             put(Metadata.Key.of("x-request-dtx-dst-service-name", Metadata.ASCII_STRING_MARSHALLER), "dtx-api-core")
-            put(Metadata.Key.of("x-request-dtx-dst-service-version", Metadata.ASCII_STRING_MARSHALLER), "1.0.0")
-            put(Metadata.Key.of("x-request-dtx-protocol", Metadata.ASCII_STRING_MARSHALLER), "GRPC")
+            put(Metadata.Key.of("x-request-dtx-dst-service-version", Metadata.ASCII_STRING_MARSHALLER), "v3")
             put(Metadata.Key.of("authorization", Metadata.ASCII_STRING_MARSHALLER), "Bearer " + config.auth)
         }
     }
