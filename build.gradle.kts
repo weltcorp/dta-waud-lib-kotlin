@@ -18,6 +18,7 @@ val rxjavaVersion = "3.0.11"
 val grpcVersion = "3.19.4"
 
 dependencies {
+    implementation(project(mapOf("path" to ":common")))
     implementation(project(mapOf("path" to ":core")))
     implementation(project(mapOf("path" to ":diary")))
     implementation(project(mapOf("path" to ":learning")))

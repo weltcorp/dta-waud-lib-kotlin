@@ -26,7 +26,7 @@ val grpcProtoVersion = "1.44.1"
 val rxjavaVersion = "3.0.11"
 
 dependencies{
-    implementation(project(":core"))
+    implementation(project(":common"))
 
     implementation("io.grpc:grpc-core:$grpcProtoVersion")
     implementation("io.grpc:grpc-okhttp:$grpcProtoVersion")
