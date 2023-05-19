@@ -1,0 +1,9 @@
+syntax = "proto3";
+package dtx.api.common.v1.common;
+
+option go_package="github.com/weltcorp/dtx-lib-proto/go-api/common/v1/common";
+
+option java_multiple_files = true;
+option java_package = "com.weltcorp.dtx.grpc";
+option java_outer_classname = "CommonProto";
+option java_generate_equals_and_hash = true;
