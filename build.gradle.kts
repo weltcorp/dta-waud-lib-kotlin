@@ -22,6 +22,7 @@ dependencies {
     implementation(project(mapOf("path" to ":core")))
     implementation(project(mapOf("path" to ":diary")))
     implementation(project(mapOf("path" to ":learning")))
+    implementation(project(mapOf("path" to ":dbm")))
     implementation("io.reactivex.rxjava3:rxjava:$rxjavaVersion")
     implementation("com.google.protobuf:protobuf-kotlin:$grpcVersion")
     implementation("com.google.protobuf:protobuf-java:$grpcVersion")
