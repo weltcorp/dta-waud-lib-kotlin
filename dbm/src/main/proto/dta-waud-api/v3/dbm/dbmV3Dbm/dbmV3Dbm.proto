@@ -1,0 +1,88 @@
+syntax = "proto3";
+package dtd.api.dbm.v3.dbm;
+
+option go_package = "github.com/weltcorp/dtx-lib-proto/go-api/dbm/v3/dbm";
+
+import "validate/validate.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/struct.proto";
+import "google/api/annotations.proto";
+
+service DbmData {
+  rpc RecordDbm(Dbm) returns (google.protobuf.Empty) {
+    option (google.api.http) = { post: "/v1/dbm", body: "*" };
+  }
+}
+
+message Dbm {
+  string os =1;
+  Category category =2;
+  string userId = 3;
+  string timestamp = 4;
+  string domainId = 5;
+  string projectId = 6;
+  optional AccessCode accessCode = 7;
+  string status = 8;
+  string osEnv = 9;
+  string version = 10;
+}
+
+message Category {
+  string value = 1;
+  repeated Source sources = 2;
+}
+
+message Source {
+  string value = 1;
+  string hardwareVersion = 2;
+  repeated Kind kinds = 3;
+  string softwareVersion = 4;
+  string deviceName = 5;
+  string bundleIdentifier = 6;
+  string hardwareName = 7;
+}
+
+message AccessCode {
+  string code = 1;
+  string siteId = 2;
+  string groupId = 3;
+}
+
+message Kind {
+  string value = 1;
+  string stepCount = 2;
+  string distance = 3;
+  string heartRate = 4;
+  string sleepState = 5;
+  string walkingSpeed = 6;
+  string walkingStepLength = 7;
+  string date = 8;
+  string latitude = 9;
+  string longitude = 10;
+  string floor = 11;
+  string accuracy = 12;
+  string horizontalAccuracy = 13;
+  string altitude = 14;
+  string verticalAccuracy = 15;
+  string speed = 16;
+  string speedAccuracy = 17;
+  string course = 18;
+  string courseAccuracy = 19;
+  string time = 20;
+  string bearing = 21;
+  string duration = 22;
+  string steps = 23;
+  string healthConnectDistance = 24;
+  string healthConnectExerciseSession = 25;
+  string healthConnectHeartRate = 26;
+  string healthConnectSleepStage = 27;
+  string healthConnectSpeed = 28;
+  string healthConnectSteps = 29;
+  string healthConnectStepsCadence = 30;
+  string healthConnectTotalCaloriesBurned = 31;
+  string startTime = 32;
+  string endTime = 33;
+  string startDate = 34;
+  string endDate = 35;
+}

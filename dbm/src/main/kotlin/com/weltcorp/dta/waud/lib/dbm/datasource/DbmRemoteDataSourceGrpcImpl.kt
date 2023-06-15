@@ -4,14 +4,13 @@ import com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode
 import com.weltcorp.dta.waud.lib.dbm.DbmApiConfig
 import com.weltcorp.dta.waud.lib.dbm.domain.model.KindInfo
 import com.weltcorp.dta.waud.lib.dbm.domain.model.SourceInfo
-import dtd.api.dbm.v1.dbm.*
+import dtd.api.dbm.v3.dbm.*
 import io.grpc.ManagedChannel
 import io.grpc.ManagedChannelBuilder
 import io.grpc.Metadata
 import java.time.ZonedDateTime
 
 private const val DOMAIN_ID = "100"
-private const val PROJECT_ID = "9" // WAUD
 private const val OS = "Android"
 private const val DBM_VERSION = "2.3"
 private const val USER_STATUS = "1"
@@ -28,7 +27,7 @@ class DbmRemoteDataSourceGrpcImpl(private val config: DbmApiConfig) : RemoteData
             put(Metadata.Key.of("x-request-dtx-src-service-name", Metadata.ASCII_STRING_MARSHALLER), "dta-waud-lib-kotlin")
             put(Metadata.Key.of("x-request-dtx-dst-protocol", Metadata.ASCII_STRING_MARSHALLER), "grpc")
             put(Metadata.Key.of("x-request-dtx-dst-service-name", Metadata.ASCII_STRING_MARSHALLER), "dtd-api-dbm")
-            put(Metadata.Key.of("x-request-dtx-dst-service-version", Metadata.ASCII_STRING_MARSHALLER), "v1")
+            put(Metadata.Key.of("x-request-dtx-dst-service-version", Metadata.ASCII_STRING_MARSHALLER), "v3")
             put(Metadata.Key.of("authorization", Metadata.ASCII_STRING_MARSHALLER), "Bearer " + config.auth)
         }
     }
@@ -57,9 +56,16 @@ class DbmRemoteDataSourceGrpcImpl(private val config: DbmApiConfig) : RemoteData
     }
 
     @OptIn(OnlyForUseByGeneratedProtoCode::class)
-    override suspend fun createDbmRecord(osEnv: String, projectId: Int, userId: Int, categoryValue: String, sourceInfo: SourceInfo, kindInfoList: List<KindInfo>) {
+    override suspend fun createDbmRecord(
+        osEnv: String,
+        projectId: Int,
+        userId: Int,
+        category: String,
+        sourceInfo: SourceInfo,
+        kindInfoList: List<KindInfo>
+    ) {
 
-        val source = source {
+        val dbmSource = source {
             value = sourceInfo.value
             hardwareVersion = sourceInfo.hardwareVersion
             softwareVersion = sourceInfo.softwareVersion
@@ -67,13 +73,13 @@ class DbmRemoteDataSourceGrpcImpl(private val config: DbmApiConfig) : RemoteData
             hardwareName = sourceInfo.hardwareName
             bundleIdentifier = sourceInfo.bundleIdentifier
             for (kindInfo in kindInfoList) {
-                kinds.add(kindInfo.toKind(categoryValue))
+                kinds.add(kindInfo.toKind(category))
             }
         }
 
-        val category = category {
-            value = categoryValue
-            sources.add(source)
+        val dbmCategory = category {
+            value = category
+            sources.add(dbmSource)
         }
 
         val request = dbm {
@@ -85,7 +91,7 @@ class DbmRemoteDataSourceGrpcImpl(private val config: DbmApiConfig) : RemoteData
             this.userId = userId.toString()
             this.status = USER_STATUS
             this.timestamp = ZonedDateTime.now().toEpochSecond().toString()
-            this.category = category
+            this.category = dbmCategory
         }
 
         val header = getHeader().apply {
@@ -96,49 +102,65 @@ class DbmRemoteDataSourceGrpcImpl(private val config: DbmApiConfig) : RemoteData
     }
 }
 
-private fun KindInfo.toKind(categoryValue: String, ): DbmV1Dbm.Kind {
+private fun KindInfo.toKind(category: String, ): DbmV3Dbm.Kind {
     val _this = this
     return kind {
-        if (categoryValue === "stepCount") {
-            this.stepCount = _this.value
-        } else if (categoryValue === "distance") {
-            this.distance = _this.value
-        } else if (categoryValue === "heartRate") {
-            this.heartRate = _this.value
-        } else if (categoryValue === "sleepState") {
-            this.sleepState = _this.value
-        } else if (categoryValue === "walkingSpeed") {
-            this.walkingSpeed = _this.value
-        } else if (categoryValue === "walkingStepLength") {
-            this.walkingStepLength = _this.value
-        }else if (categoryValue === "latitude") {
-            this.latitude = _this.value
-        } else if (categoryValue === "longitude") {
-            this.longitude = _this.value
-        } else if (categoryValue === "floor") {
-            this.floor = _this.value
-        } else if (categoryValue === "accuracy") {
-            this.accuracy = _this.value
-        } else if (categoryValue === "horizontalAccuracy") {
-            this.horizontalAccuracy = _this.value
-        } else if (categoryValue === "altitude") {
-            this.altitude = _this.value
-        } else if (categoryValue === "verticalAccuracy") {
-            this.verticalAccuracy = _this.value
-        } else if (categoryValue === "speed") {
-            this.speed = _this.value
-        } else if (categoryValue === "speedAccuracy") {
-            this.speedAccuracy = _this.value
-        } else if (categoryValue === "course") {
-            this.course = _this.value
-        } else if (categoryValue === "courseAccuracy") {
-            this.courseAccuracy = _this.value
-        }else if (categoryValue === "bearing") {
-            this.bearing = _this.value
-        } else if (categoryValue === "duration") {
-            this.duration = _this.value
-        } else if (categoryValue === "steps") {
-            this.steps = _this.value
+        if (category === "value") {
+            this.value = _this.data
+        } else if (category === "stepCount") {
+            this.stepCount = _this.data
+        } else if (category === "distance") {
+            this.distance = _this.data
+        } else if (category === "heartRate") {
+            this.heartRate = _this.data
+        } else if (category === "sleepState") {
+            this.sleepState = _this.data
+        } else if (category === "walkingSpeed") {
+            this.walkingSpeed = _this.data
+        } else if (category === "walkingStepLength") {
+            this.walkingStepLength = _this.data
+        } else if (category === "latitude") {
+            this.latitude = _this.data
+        } else if (category === "longitude") {
+            this.longitude = _this.data
+        } else if (category === "floor") {
+            this.floor = _this.data
+        } else if (category === "accuracy") {
+            this.accuracy = _this.data
+        } else if (category === "horizontalAccuracy") {
+            this.horizontalAccuracy = _this.data
+        } else if (category === "altitude") {
+            this.altitude = _this.data
+        } else if (category === "verticalAccuracy") {
+            this.verticalAccuracy = _this.data
+        } else if (category === "speed") {
+            this.speed = _this.data
+        } else if (category === "speedAccuracy") {
+            this.speedAccuracy = _this.data
+        } else if (category === "course") {
+            this.course = _this.data
+        } else if (category === "courseAccuracy") {
+            this.courseAccuracy = _this.data
+        } else if (category === "bearing") {
+            this.bearing = _this.data
+        } else if (category === "steps") {
+            this.steps = _this.data
+        } else if (category === "healthConnectDistance") {
+            this.healthConnectDistance = _this.data
+        } else if (category === "healthConnectExerciseSession") {
+            this.healthConnectExerciseSession = _this.data
+        } else if (category === "healthConnectHeartRate") {
+            this.healthConnectHeartRate = _this.data
+        } else if (category === "healthConnectSleepStage") {
+            this.healthConnectSleepStage = _this.data
+        } else if (category === "healthConnectSpeed") {
+            this.healthConnectSpeed = _this.data
+        } else if (category === "healthConnectSteps") {
+            this.healthConnectSteps = _this.data
+        } else if (category === "healthConnectStepsCadence") {
+            this.healthConnectStepsCadence = _this.data
+        } else if (category === "healthConnectTotalCaloriesBurned") {
+            this.healthConnectTotalCaloriesBurned = _this.data
         }
 
         if (_this.time != null) {
@@ -159,5 +181,9 @@ private fun KindInfo.toKind(categoryValue: String, ): DbmV1Dbm.Kind {
         if (_this.endDate != null) {
             this.endDate = _this.endDate
         }
+        if (_this.duration != null) {
+            this.duration = _this.duration
+        }
+
     }
 }

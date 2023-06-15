@@ -13,7 +13,7 @@ suspend fun main(args: Array<String>) {
         .build()
 
     val sourceInfo = SourceInfo(
-        value = "Rano's iPhone",
+        value = "Welt's iPhone",
         deviceName = "iPhone",
         hardwareName = "iPhone 12 Pro Max",
         hardwareVersion = "14.8",
@@ -23,9 +23,9 @@ suspend fun main(args: Array<String>) {
 
     val kindInfoList = listOf(
         KindInfo(
-            value = "steps",
-            startTime = "1686638280",
-            endTime = "1686638280",
+            data = "1234",
+            startTime = "1686815835",
+            endTime = "1686815835",
         )
     )
 
@@ -33,8 +33,8 @@ suspend fun main(args: Array<String>) {
     dbmRemoteDataSource.createDbmRecord(
         osEnv = "dev",
         projectId = 9,
-        userId = 17520,
-        categoryValue = "steps",
+        userId = 17927,
+        category = "healthConnectSteps",
         sourceInfo = sourceInfo,
         kindInfoList = kindInfoList,
     )
