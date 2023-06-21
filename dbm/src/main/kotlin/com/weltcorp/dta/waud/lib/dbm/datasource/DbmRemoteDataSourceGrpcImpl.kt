@@ -2,6 +2,7 @@ package com.weltcorp.dta.waud.lib.dbm.datasource
 
 import com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode
 import com.weltcorp.dta.waud.lib.dbm.DbmApiConfig
+import com.weltcorp.dta.waud.lib.dbm.domain.model.DbmRecordInfo
 import com.weltcorp.dta.waud.lib.dbm.domain.model.KindInfo
 import com.weltcorp.dta.waud.lib.dbm.domain.model.SourceInfo
 import dtd.api.dbm.v3.dbm.*
@@ -99,6 +100,56 @@ class DbmRemoteDataSourceGrpcImpl(private val config: DbmApiConfig) : RemoteData
         }
 
         stub().recordDbm(request, header)
+    }
+
+    override suspend fun createDbmRecordList(
+        osEnv: String,
+        projectId: Int,
+        userId: Int,
+        dbmRecordInfoList: List<DbmRecordInfo>,
+        sourceInfo: SourceInfo,
+    ) {
+
+        val request = recordDbmsRequest {
+            dbmRecordInfoList.forEach { dbmRecordInfo ->
+                dbmRecordInfo.kindInfoList.forEach { kindInfo ->
+                    val source = source {
+                        value = sourceInfo.value
+                        hardwareVersion = sourceInfo.hardwareVersion
+                        softwareVersion = sourceInfo.softwareVersion
+                        deviceName = sourceInfo.deviceName
+                        hardwareName = sourceInfo.hardwareName
+                        bundleIdentifier = sourceInfo.bundleIdentifier
+                        kinds.add(kindInfo.toKind(dbmRecordInfo.category))
+                    }
+
+                    val category = category {
+                        value = dbmRecordInfo.category
+                        sources.add(source)
+                    }
+
+                    this.dbms.add(
+                        dbm {
+                            this.os = OS
+                            this.osEnv = osEnv
+                            this.version = DBM_VERSION
+                            this.domainId = DOMAIN_ID
+                            this.projectId = projectId.toString()
+                            this.userId = userId.toString()
+                            this.status = USER_STATUS
+                            this.timestamp = ZonedDateTime.now().toEpochSecond().toString()
+                            this.category = category
+                        }
+                    )
+                }
+            }
+        }
+
+        val header = getHeader().apply {
+            put(Metadata.Key.of("x-request-dtx-user-id", Metadata.ASCII_STRING_MARSHALLER), "$userId")
+        }
+
+        stub().recordDbms(request, header)
     }
 }
 

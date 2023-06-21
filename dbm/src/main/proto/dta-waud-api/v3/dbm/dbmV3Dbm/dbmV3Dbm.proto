@@ -11,8 +11,15 @@ import "google/api/annotations.proto";
 
 service DbmData {
   rpc RecordDbm(Dbm) returns (google.protobuf.Empty) {
-    option (google.api.http) = { post: "/v1/dbm", body: "*" };
+    option (google.api.http) = { post: "/dbm", body: "*" };
   }
+  rpc RecordDbms(RecordDbmsRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = { post: "/dbms", body: "*" };
+  }
+}
+
+message RecordDbmsRequest {
+  repeated Dbm dbms = 1;
 }
 
 message Dbm {
